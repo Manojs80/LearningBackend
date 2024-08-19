@@ -1,0 +1,81 @@
+import bcrypt from "bcrypt";
+import {User} from "../models/userModel.js"
+import { generateUserToken } from "../utils/generativeToken.js";
+
+
+
+export const userCreate = async(req,res,next)=>{
+    try {
+        console.log("here");
+        const { name , email , password , mobile , profilepic , course } = req.body;
+        if (!name || !password || !mobile || !email) {
+            
+            
+            return res.status(400).json({ success: false , message: "all fields required"});    
+        }
+
+        const userExist = await User.findOne({email})
+        if (userExist) { return  res.status(400).json({ success: false , message: "already exist"});  
+        }
+
+       const salt = 10;
+       const hashedpassword = bcrypt.hashSync(password, salt);     
+       const newUser = new User( { name , email , password: hashedpassword , mobile , profilepic , course }) ;  
+       await newUser.save();
+
+       const token = generateUserToken(email);
+       res.cookie("token", token );
+       res.json({ success: true , message: "user created succcesfuly"})
+        
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ success:false ,  message: "intern server"});
+    }
+}
+
+export const userLogin = async(req,res,next)=>{
+    try {
+        const {  email, password  } = req.body;
+        if ( !password ||  !email) {
+            return res.status(400).json({ success: false , message: "all fields required"});
+            
+        }
+        const userExist = await User.findOne({email})
+        if (!userExist) { return  res.status(400).json({ success: false , message: "user does not exist"});  
+         }
+
+         const passwordMatch = bcrypt.compareSync(password, userExist.password);
+         if (!passwordMatch) { return  res.status(400).json({ success: false , message: "does not match"});  
+        }
+
+        const token = generateUserToken(email);
+        res.cookie("token", token );
+        res.json({ success: true , message: "user login succcesfuly"})
+
+    } catch (error) {
+        res.status(500).json({ message: "intern server"});
+    }
+}
+
+export const userProfile = async(req,res,next)=>{
+    try {
+        const {id}= req.params;
+        const userData = await User.findById(id).select("-password");
+         res.json({ success: true , message: "user profile fetch succcesfuly" , data:userData})
+
+    } catch (error) {
+        res.status(400).json({ message: "intern server error"});
+    }
+}
+ 
+// export const checkUser = async(req,res,next)=>{
+//     try {
+//      const user = req.user;
+//      if (!user) { return  res.status(400).json({ success: true , message: "user not authenticated"});  
+//     }
+//     res.json({ success: true , message: "user  authenticated"})
+
+//     } catch (error) {
+//         res.status(400).json({ message: "intern server error"});
+//     }
+// }
