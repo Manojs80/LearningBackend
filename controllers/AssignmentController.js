@@ -15,18 +15,17 @@
      try {
         const {title,description,duedate,instructor,course} = req.body;
        
+        
+        const existAssignment = await Assignment.findOne({ title: title });
 
-
-        const Assignment = await Assignment.findOne({ title: title });
-
-        if (Assignment) {
+        if (existAssignment) {
          return res.status(400).json({ message: "Assignment already exist" });
          }
-
+         
        
         const newAssignment = new Assignment({ title,description,duedate,instructor,course }); 
         await newAssignment.save();
-
+        console.log("test3");
       res.json({ success: true , message: "Assignment create succcesfuly" , data:newAssignment});   
 
      } catch (error) {

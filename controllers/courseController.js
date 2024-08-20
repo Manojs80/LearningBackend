@@ -19,9 +19,9 @@ export const createCourse = async(req,res,next)=>{
         return res.status(400).json({ message: "image not visible" });
          }
 
-       const Course = await course.findOne({ title: title });
+       const existCourse = await course.findOne({ title: title });
 
-       if (Course) {
+       if (existCourse) {
         return res.status(400).json({ message: "course already exist" });
         }
 

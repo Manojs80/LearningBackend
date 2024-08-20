@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const quizSchema = new mongoose.Schema({
     title: { type: String, required: true },
-    description: String,
+    description: {type: String},
     createdAt: { type: Date, default: Date.now },
     questions: [{
       text: { type: String, required: true },

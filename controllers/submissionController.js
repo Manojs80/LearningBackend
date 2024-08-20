@@ -16,15 +16,12 @@ export const createSubmission = async(req,res,next)=>{
     try {
        const {student,assignment,submissionDate,content,grade,instructor,course} = req.body;
       
+       const existSubmission = await Submission.findOne({ student: student });
 
-
-       const Submission = await Submission.findOne({ student: student });
-
-       if (Submission) {
+       if (existSubmission) {
         return res.status(400).json({ message: "submitt already exist" });
         }
 
-      
        const newSubmission = new Submission({ student,assignment,submissionDate,content,grade,instructor,course }); 
        await newSubmission.save();
 

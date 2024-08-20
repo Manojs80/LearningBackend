@@ -5,12 +5,14 @@ import instructorRoutes from './instructorRoutes.js';
 import adminRoutes from './adminRoutes.js';
 import assignmentRoutes from './assignmentRoutes.js';
 import quizRoutes from './quizRoutes.js';
+import studyplanRoutes from './studyplanRoutes.js';
 
 const v1Router = express.Router();
 
 
 v1Router.use('/user',userRoutes)
 v1Router.use('/course',courseRoutes)
+v1Router.use('/studyplan',studyplanRoutes)
 v1Router.use('/instructor',instructorRoutes)
 v1Router.use('/admin',adminRoutes)
 v1Router.use('/assignment',assignmentRoutes)
