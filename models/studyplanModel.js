@@ -24,7 +24,7 @@ const studyplanSchema = new mongoose.Schema(
                   ref:"instructor"},
         user: { type: mongoose.Schema.Types.ObjectId, 
             ref: "User" },   
-         
-
-    })
+    },
+    { timestamps: true},
+  )
 export const Studyplan = mongoose.model("Studyplan", studyplanSchema);

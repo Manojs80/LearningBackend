@@ -24,7 +24,7 @@ export const instructorCreate = async (req, res, next) => {
         await newInstructor.save();
 
         //create token
-        const token = generateUserToken(email, "instructor");
+        const token = generateUserToken(email, "Instructor");
 
         res.cookie("token", token);
         res.json({ success: true, message: "Instructor created successfully" });
@@ -48,7 +48,7 @@ export const instructorLogin = async(req,res,next)=>{
          if (!passwordMatch) { return  res.status(400).json({ success: false , message: "Instructor does not match"});  
         }
 
-        const token = generateUserToken(email);
+        const token = generateUserToken(email,"Instructor");
         res.cookie("token", token );
         res.json({ success: true , message: "Instructor login succcesfuly"})
 
@@ -56,7 +56,6 @@ export const instructorLogin = async(req,res,next)=>{
         res.status(500).json({ message: "intern server"});
     }
  };
-
 
 export const instructorProfile = async (req, res, next) => {
     try {
@@ -66,6 +65,34 @@ export const instructorProfile = async (req, res, next) => {
         res.json({ success: true, message: "Intructor data fetched", data: useData });
     } catch (error) {
         res.status(error.status || 500).json({ message: error.message || "Internal server error" });
+    }
+};
+
+export const instructorUpdate = async(req,res,next)=>{
+    try {
+     const {name, email, password, courses,role} = req.body;
+     const {id} = req.params;
+
+      const updatedInstructor = await Instructor.findByIdAndUpdate(id,{name, email, password, courses,role},{new:true}); 
+
+     res.json({ success: true , message: "Instructor updated succcesfuly" , data:updatedInstructor });   
+
+    } catch (error) {
+        res.status(400).json({ message: "Instructor intern server error"});
+    }
+};
+
+export const instructorDelete = async(req,res,next)=>{
+    try {
+    
+     const {id} = req.params;
+
+      await Instructor.findByIdAndDelete(id); 
+
+     res.json({ success: true , message: "Instructor deleted succcesfuly" });   
+
+    } catch (error) {
+        res.status(400).json({ message: "Instructor intern server error"});
     }
 };
 

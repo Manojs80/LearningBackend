@@ -7,10 +7,8 @@ import { generateUserToken } from "../utils/generativeToken.js";
 export const userCreate = async(req,res,next)=>{
     try {
         console.log("here");
-        const { name , email , password , mobile , profilepic , course } = req.body;
-        if (!name || !password || !mobile || !email) {
-            
-            
+        const { name , email , password , mobile , profilepic , courses } = req.body;
+        if (!name || !password || !mobile || !email) {            
             return res.status(400).json({ success: false , message: "all fields required"});    
         }
 
@@ -20,10 +18,10 @@ export const userCreate = async(req,res,next)=>{
 
        const salt = 10;
        const hashedpassword = bcrypt.hashSync(password, salt);     
-       const newUser = new User( { name , email , password: hashedpassword , mobile , profilepic , course }) ;  
+       const newUser = new User( { name , email , password: hashedpassword , mobile , profilepic , courses }) ;  
        await newUser.save();
 
-       const token = generateUserToken(email);
+       const token = generateUserToken(email,"User");
        res.cookie("token", token );
        res.json({ success: true , message: "user created succcesfuly"})
         
@@ -48,7 +46,7 @@ export const userLogin = async(req,res,next)=>{
          if (!passwordMatch) { return  res.status(400).json({ success: false , message: "does not match"});  
         }
 
-        const token = generateUserToken(email);
+        const token = generateUserToken(email,"User");
         res.cookie("token", token );
         res.json({ success: true , message: "user login succcesfuly"})
 
@@ -68,6 +66,34 @@ export const userProfile = async(req,res,next)=>{
     }
 }
  
+export const userUpdate = async(req,res,next)=>{
+    try {
+     const {name , email , password , mobile , profilepic , courses } = req.body;
+     const {id} = req.params;
+
+      const updatedUser = await User.findByIdAndUpdate(id,{name , email , password , mobile , profilepic , courses },{new:true}); 
+
+     res.json({ success: true , message: "User updated succcesfuly" , data:updatedUser });   
+
+    } catch (error) {
+        res.status(400).json({ message: "User intern server error"});
+    }
+};
+
+export const userDelete = async(req,res,next)=>{
+    try {
+    
+     const {id} = req.params;
+
+      await User.findByIdAndDelete(id); 
+
+     res.json({ success: true , message: "User deleted succcesfuly" });   
+
+    } catch (error) {
+        res.status(400).json({ message: " User intern server error"});
+    }
+};
+
 // export const checkUser = async(req,res,next)=>{
 //     try {
 //      const user = req.user;

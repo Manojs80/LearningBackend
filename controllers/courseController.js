@@ -1,5 +1,6 @@
 import { cloudinaryInstance } from "../configuration/cloudinary.js";
 import { course } from "../models/courseModel.js";
+import { Instructor } from "../models/instructorModel.js";
 
 export const getCourseList = async(req,res,next)=>{
     try {
@@ -11,9 +12,26 @@ export const getCourseList = async(req,res,next)=>{
     }
 };
 
+export const getCourse = async(req,res,next)=>{
+    try {
+        const {id} = req.params;
+     const CourseGet = await course.findById(id);
+      res.json({ success: true , message: "Coursefetch succcesfuly" , data:CoursenGet});   
+ 
+     } catch (error) {
+        res.status(400).json({ message: "Course server error"});
+     }
+ };
+
 export const createCourse = async(req,res,next)=>{
     try {
-       const {title,desc,duration,instructor} = req.body;
+       const {title,description,duration} = req.body;
+      
+       const user=req.user;
+       let currentInstructor;
+       if(user.role==='instructor'){
+         currentInstructor = await Instructor.findOne({email:user.email});
+       }
        
        if (!req.file) {
         return res.status(400).json({ message: "image not visible" });
@@ -32,9 +50,13 @@ export const createCourse = async(req,res,next)=>{
 
          console.log(uploadResult);
 
-        const newCourse = new course({ title, desc, duration, instructor });
+        const newCourse = new course({ title, description, duration });
         if (uploadResult?.url) {
             newCourse.image = uploadResult.url;
+        }        
+        if (currentInstructor) {
+            console.log(currentInstructor);
+           newCourse.instructor = currentInstructor; 
         } 
          await newCourse.save();
 

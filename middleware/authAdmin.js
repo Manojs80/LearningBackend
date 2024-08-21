@@ -9,12 +9,17 @@ export const authAdmin = (req, res, next) => {
             return res.status(400).json({ success: false, message: "Admin not authenticated" });
         }
 
-        const tokenVerified = jwt.verify(token, process.env.jwt_token);
+        const tokenverify = jwt.verify(token, process.env.jwt_token);
 
-        if (!tokenVerified) {
+        if (!tokenverify) {
             return res.status(400).json({ success: false, message: "Admin not authenticated" });
-        }     
-        req.user = tokenVerified;
+        }   
+        
+        if (tokenverify.role !== "Admin") {
+            return res.status(400).json({ message: "user not authenticated" });
+        }
+        console.log(" tokenverify", tokenverify);
+        req.user = tokenverify;
         next();
 
     } catch (error) {

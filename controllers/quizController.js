@@ -71,10 +71,6 @@ export const submitQuiz = async(req,res,next)=>{
   }
  };
 
-
-
-
-
  export const updateQuiz = async(req,res,next)=>{
      try {
       const {title,description,questions,instructor,course} = req.body;
@@ -88,7 +84,6 @@ export const submitQuiz = async(req,res,next)=>{
          res.status(400).json({ message: "intern server error"});
      }
  };
-
  
  export const deleteQuiz = async(req,res,next)=>{
      try {

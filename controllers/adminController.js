@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 
 export const adminCreate = async (req, res, next) => {
     try {       
-        const { name, email, password, courses } = req.body;
+        const { name, email, password, role,courses } = req.body;
         if (!name || !email || !password) {
             return res.status(400).json({ success: false, message: "all fields required" });
         }
@@ -20,11 +20,11 @@ export const adminCreate = async (req, res, next) => {
         const hashedPassword = bcrypt.hashSync(password, salt);
 
         //create new user
-        const newAdmin = new Admin({ name, email, password: hashedPassword});
+        const newAdmin = new Admin({ name, email, password: hashedPassword,role,courses});
         await newAdmin.save();
 
         //create token
-        const token = generateUserToken(email);
+        const token = generateUserToken(email,"Admin");
 
         res.cookie("token", token);
         res.json({ success: true, message: "Admin created successfully" });
@@ -48,7 +48,7 @@ export const adminLogin = async(req,res,next)=>{
          if (!passwordMatch) { return  res.status(400).json({ success: false , message: "Admin does not match"});  
         }
 
-        const token = generateUserToken(email);
+        const token = generateUserToken(email,"Admin");
         res.cookie("token", token );
         res.json({ success: true , message: "Admin login succcesfuly"})
 
@@ -68,6 +68,35 @@ export const adminProfile = async (req, res, next) => {
         res.status(error.status || 500).json({ message: error.message || "Internal server error" });
     }
 };
+
+export const adminUpdate = async(req,res,next)=>{
+    try {
+     const {name, email, password, courses,role} = req.body;
+     const {id} = req.params;
+
+      const updatedAdmin = await Admin.findByIdAndUpdate(id,{name, email, password, courses,role},{new:true}); 
+
+     res.json({ success: true , message: "Admin updated succcesfuly" , data:updatedAdmin });   
+
+    } catch (error) {
+        res.status(400).json({ message: "Admin intern server error"});
+    }
+};
+
+export const adminDelete = async(req,res,next)=>{
+    try {
+    
+     const {id} = req.params;
+
+      await Admin.findByIdAndDelete(id); 
+
+     res.json({ success: true , message: "Admin deleted succcesfuly" });   
+
+    } catch (error) {
+        res.status(400).json({ message: " Admin intern server error"});
+    }
+};
+
 
 export const checkAdmin = async (req, res, next) => {
     try {

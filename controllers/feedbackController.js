@@ -10,6 +10,17 @@ export const getFeedbackList = async(req,res,next)=>{
     }
 };
 
+export const getFeedback = async(req,res,next)=>{
+    try {
+        const {id} = req.params;
+     const FeedbackGet = await Feedback.findById(id);
+      res.json({ success: true , message: "Submission fetch succcesfuly" , data:FeedbackGet});   
+ 
+     } catch (error) {
+        res.status(400).json({ message: "intern server error"});
+     }
+ };
+
 export const createFeedback = async(req,res,next)=>{
     try {
        const {user,admin,feedbackText,rating,course} = req.body;
@@ -32,7 +43,6 @@ export const createFeedback = async(req,res,next)=>{
     }
 };
 
-
 export const updateFeedback = async(req,res,next)=>{
     try {
      const {user,admin,feedbackText,rating,course} = req.body;
@@ -46,7 +56,6 @@ export const updateFeedback = async(req,res,next)=>{
         res.status(400).json({ message: "intern server error"});
     }
 };
-
 
 export const deleteFeedback = async(req,res,next)=>{
     try {

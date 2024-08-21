@@ -8,6 +8,8 @@ import mongoose from 'mongoose';
     grade: Number, // Optional, if you want to store the grade
     instructor:{type:mongoose.Types.ObjectId, ref:"instructor"},
     course: { type: mongoose.Schema.Types.ObjectId, ref: 'Course', required: true },
-    });
+    },
+    { timestamps: true},
+   );
   
  export const Submission = mongoose.model('Submission', submissionSchema);

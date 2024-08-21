@@ -13,16 +13,16 @@ const instructorSchema = new mongoose.Schema(
         },
         role: {
             type: String,
-           
+            required: true,
         },
         password: {
             type: String,
             required: true,
             minLength: 6,
         },
-        courses: [{ type: mongoose.Types.ObjectId, ref: "Course" }],
+        courses: [{ type: mongoose.Types.ObjectId, ref: "course" }],
     },
-    { timestamps: true }
+    { timestamps: true},
 );
 
 export const Instructor = mongoose.model("Instructor", instructorSchema);

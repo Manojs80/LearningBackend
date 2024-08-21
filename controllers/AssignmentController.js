@@ -11,6 +11,17 @@
      }
 };
 
+export const getAssignment = async(req,res,next)=>{
+    try {
+        const {id} = req.params;
+     const AssignmentGet = await Assignment.findById(id);
+      res.json({ success: true , message: "Assignment fetch succcesfuly" , data:AssignmentGet});   
+ 
+     } catch (error) {
+        res.status(400).json({ message: "Assignment intern server error"});
+     }
+ };
+
  export const createAssignment = async(req,res,next)=>{
      try {
         const {title,description,duedate,instructor,course} = req.body;

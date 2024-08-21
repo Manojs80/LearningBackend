@@ -25,12 +25,11 @@ const userSchema = new mongoose.Schema({
    default:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlNFao0fPznjqXWepZBQuAZhbEUtabbnM32MblYxtCBNecS2qBLyXVHJBITWcxKbfKsD8&usqp=CAU",
 
    }, 
- course:[{
+ courses:[{
     type:mongoose.Types.ObjectId,
     ref:'course'
  }],
-
 },
-   { timestamps: true }
+   { timestamps: true},
 );
 export const User = mongoose.model('User',userSchema);

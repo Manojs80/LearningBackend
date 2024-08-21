@@ -6,6 +6,8 @@ import adminRoutes from './adminRoutes.js';
 import assignmentRoutes from './assignmentRoutes.js';
 import quizRoutes from './quizRoutes.js';
 import studyplanRoutes from './studyplanRoutes.js';
+import submissionRoutes from './submissionRoutes.js';
+import feedbackRoutes from './feedbackRoutes.js';
 
 const v1Router = express.Router();
 
@@ -17,4 +19,6 @@ v1Router.use('/instructor',instructorRoutes)
 v1Router.use('/admin',adminRoutes)
 v1Router.use('/assignment',assignmentRoutes)
 v1Router.use('/quiz',quizRoutes)
+v1Router.use('/submission',submissionRoutes)
+v1Router.use('/feedback',feedbackRoutes)
 export default v1Router;

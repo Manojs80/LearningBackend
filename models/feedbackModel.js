@@ -24,13 +24,12 @@ const feedbackSchema = new mongoose.Schema({
       course: { 
             type:mongoose.Types.ObjectId,
             ref:'course'
-           required: true 
+           
       },
       createdAt: { 
         type: Date, 
         default: Date.now 
-      }
-
-})
+      },
+});
 
 export const Feedback = mongoose.model('Feedback', feedbackSchema);

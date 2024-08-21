@@ -6,9 +6,9 @@ const courseSchema = new mongoose.Schema ({
     type:String,
     required:true,
   }, 
-  desc:{
-    type:[String,"Please enter a string"],
-        
+  description:{
+    type:String,
+    required:true,        
   },
   image:{
     type:String,
@@ -20,9 +20,13 @@ const courseSchema = new mongoose.Schema ({
  },
  instructor:{
     type:mongoose.Types.ObjectId,
-    ref:"instructor",
+    ref:"Instructor",
 },
-
- 
-});
+user:[{
+  type:mongoose.Types.ObjectId,
+  ref:"User",
+}]
+},
+{timestamps: true},
+);
 export const course = mongoose.model("course",courseSchema);

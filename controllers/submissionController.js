@@ -10,6 +10,16 @@ export const getSubmissionList = async(req,res,next)=>{
     }
 };
 
+export const getSubmission = async(req,res,next)=>{
+    try {
+        const {id} = req.params;
+     const SubmissionGet = await Submission.findById(id);
+      res.json({ success: true , message: "Submission fetch succcesfuly" , data:SubmissionGet});   
+ 
+     } catch (error) {
+        res.status(400).json({ message: "Submission intern server error"});
+     }
+ };
 
 
 export const createSubmission = async(req,res,next)=>{

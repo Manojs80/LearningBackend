@@ -11,6 +11,11 @@ export const authUser =(req,res,next)=>{
         if (!tokenverify ) {
             return res.status(400).json({ message: "user not authenticated"});  
          }
+
+         if (tokenverify.role !== "User") {
+            return res.status(400).json({ message: "User not authenticated" });
+        }
+
          console.log(" tokenverify", tokenverify);
          
          req.user= tokenverify;
