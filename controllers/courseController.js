@@ -16,7 +16,7 @@ export const getCourse = async(req,res,next)=>{
     try {
         const {id} = req.params;
      const CourseGet = await course.findById(id);
-      res.json({ success: true , message: "Coursefetch succcesfuly" , data:CoursenGet});   
+      res.json({ success: true , message: "Coursefetch succcesfuly" , data:CourseGet});   
  
      } catch (error) {
         res.status(400).json({ message: "Course server error"});
@@ -50,7 +50,7 @@ export const createCourse = async(req,res,next)=>{
 
          console.log(uploadResult);
 
-        const newCourse = new course({ title, description, duration });
+        const newCourse = new course({ title, description,duration,objectives });
         if (uploadResult?.url) {
             newCourse.image = uploadResult.url;
         }        
@@ -71,10 +71,15 @@ export const createCourse = async(req,res,next)=>{
 
 export const updateCourse = async(req,res,next)=>{
     try {
-     const {title,desc,image,duration,insructor} = req.body;
+     const {title,description,duration,insructor} = req.body;
      const {id} = req.params;
+     const uploadResult = await cloudinaryInstance.uploader.upload(req.file.path).catch((error) => {
+        console.log(error);
+    });
 
-      const updatedCourse = await course.findByIdAndUpdate(id,{title,desc,image,duration,insructor},{new:true}); 
+     console.log(uploadResult);
+
+      const updatedCourse = await course.findByIdAndUpdate(id,{title,description,image:uploadResult.url,duration,insructor},{new:true}); 
 
      res.json({ success: true , message: "course updated succcesfuly" , data:updatedCourse });   
 

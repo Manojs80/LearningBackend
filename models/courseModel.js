@@ -18,6 +18,10 @@ const courseSchema = new mongoose.Schema ({
     type:Number,
     required:true,
  },
+ objectives:{
+  type:[String],
+  default: [],
+},
  instructor:{
     type:mongoose.Types.ObjectId,
     ref:"Instructor",

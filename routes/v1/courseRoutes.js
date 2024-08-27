@@ -10,10 +10,10 @@ import { authINAD } from '../../middleware/authIN-AD.js'
 
 const router = express.Router()
 
-router.get("/courseList", authAdmin ,getCourseList )
-router.get("/getcourse/:id",authINAD, getCourse)
+router.get("/courseList",getCourseList )
+router.get("/getcourse/:id", getCourse)
 router.post("/create",upload.single("image"),authINAD ,createCourse)
-router.put("/update/:id",authINAD ,updateCourse )
+router.put("/update/:id",upload.single("image"),authINAD ,updateCourse )
 router.delete("/delete/:id",authAdmin, deleteCourse)
 
 export default router

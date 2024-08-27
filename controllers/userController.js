@@ -8,6 +8,7 @@ export const userCreate = async(req,res,next)=>{
     try {
         console.log("here");
         const { name , email , password , mobile , profilepic , courses } = req.body;
+        console.log("usercreate ",req.body.name )
         if (!name || !password || !mobile || !email) {            
             return res.status(400).json({ success: false , message: "all fields required"});    
         }
@@ -70,12 +71,17 @@ export const userUpdate = async(req,res,next)=>{
     try {
      const {name , email , password , mobile , profilepic , courses } = req.body;
      const {id} = req.params;
-
+     console.log("Updating user with ID:", id);
+     console.log("Update details:", { name, email, mobile, profilepic, courses });
       const updatedUser = await User.findByIdAndUpdate(id,{name , email , password , mobile , profilepic , courses },{new:true}); 
-
+      if (!updatedUser) {
+        return res.status(404).json({ success: false, message: "User not found" });
+    }
+      console.log(" message: User updated succcesfuly",updatedUser)
      res.json({ success: true , message: "User updated succcesfuly" , data:updatedUser });   
-
+  console.log(" message: User updated succcesfuly")
     } catch (error) {
+        console.error("Error updating user:", error);
         res.status(400).json({ message: "User intern server error"});
     }
 };
