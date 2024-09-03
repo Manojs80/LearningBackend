@@ -1,10 +1,13 @@
 import { Instructor } from "../models/instructorModel.js";
 import { generateUserToken } from "../utils/generativeToken.js";
 import bcrypt from "bcrypt";
+import { cloudinaryInstance } from "../configuration/cloudinary.js";
 
 export const instructorCreate = async (req, res, next) => {
     try {
-        const { name, email, password, courses } = req.body;
+        console.log("here");
+        const { name , email , password , mobile , role, courses } = req.body;
+        console.log("instructor create ",req.body )
         if (!name || !email || !password) {
             return res.status(400).json({ success: false, message: "all fields required" });
         }
@@ -14,13 +17,30 @@ export const instructorCreate = async (req, res, next) => {
         if (instructorExist) {
             return res.status(404).json({ success: false, message: "Instructor already exist" });
         }
-
+   
+        
         //hashing
         const salt = 10;
         const hashedPassword = bcrypt.hashSync(password, salt);
-
+        if (!req.file) {
+            console.log("image not visible");
+            
+            //return res.status(400).json({ message: "image not visible" });
+             }
+           // Upload an image
+           const uploadResult = await cloudinaryInstance.uploader.upload(req.file.path).catch((error) => {
+            console.log(error);
+        });
+        console.log(uploadResult);
         //create new user
-        const newInstructor = new Instructor({ name, email, password: hashedPassword, role: "instructor", courses });
+        const newInstructor = new Instructor({ name, email, password: hashedPassword, mobile , role, courses });
+      
+        if (uploadResult?.url) {
+            newInstructor.profilepic = uploadResult.url;
+        } 
+        
+        
+        
         await newInstructor.save();
 
         //create token
@@ -79,6 +99,16 @@ export const instructorUpdate = async(req,res,next)=>{
 
     } catch (error) {
         res.status(400).json({ message: "Instructor intern server error"});
+    }
+};
+
+export const ListInstructor = async(req,res,next)=>{
+    try {
+     const InstructorList = await Instructor.find();
+     res.json({ success: true , message: "course fetch succcesfuly" , data:InstructorList});   
+
+    } catch (error) {
+        res.status(400).json({ message: "intern server error"});
     }
 };
 

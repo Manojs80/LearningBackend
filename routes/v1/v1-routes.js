@@ -8,6 +8,7 @@ import quizRoutes from './quizRoutes.js';
 import studyplanRoutes from './studyplanRoutes.js';
 import submissionRoutes from './submissionRoutes.js';
 import feedbackRoutes from './feedbackRoutes.js';
+import contactRoutes from './contactRoutes.js';
 
 const v1Router = express.Router();
 
@@ -20,5 +21,6 @@ v1Router.use('/admin',adminRoutes)
 v1Router.use('/assignment',assignmentRoutes)
 v1Router.use('/quiz',quizRoutes)
 v1Router.use('/submission',submissionRoutes)
+v1Router.use('/contact',contactRoutes)
 v1Router.use('/feedback',feedbackRoutes)
 export default v1Router;

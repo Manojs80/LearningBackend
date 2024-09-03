@@ -12,8 +12,11 @@ import { Quiz } from "../models/quizModel.js";
 
  export const getQuizId = async(req,res,next)=>{
      try {
+      console.log("test-1");    
          const {id} = req.params;
-      const existQuizId = await Quiz.find(id);
+         console.log("test-1",id); 
+      const existQuizId = await Quiz.findById(id);
+      console.log("test-2");
          if (!existQuizId) {
            return res.status(404).send('Quiz not found');
          }
@@ -27,7 +30,8 @@ import { Quiz } from "../models/quizModel.js";
  export const createQuiz = async(req,res,next)=>{
      try {
         const {title,description,questions,instructor,course} = req.body;
-   
+       console.log("createquiz",req.body);
+       
         const existingQuiz = await Quiz.findOne({ title: title });
 
         if (existingQuiz) {

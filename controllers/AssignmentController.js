@@ -3,7 +3,10 @@
 
  export const getAssignmentList = async(req,res,next)=>{
     try {
-     const AssignmentList = await Assignment.find();
+        const {id} = req.params;
+        console.log("test1",{course:id}); 
+     const AssignmentList = await Assignment.find({course:id});
+     console.log("test2",AssignmentList);
       res.json({ success: true , message: "Assignment fetch succcesfuly" , data:AssignmentList});   
 
      } catch (error) {
@@ -13,7 +16,10 @@
 
 export const getAssignment = async(req,res,next)=>{
     try {
+         
         const {id} = req.params;
+        console.log("reach assignment controller",id);
+
      const AssignmentGet = await Assignment.findById(id);
       res.json({ success: true , message: "Assignment fetch succcesfuly" , data:AssignmentGet});   
  
@@ -24,17 +30,18 @@ export const getAssignment = async(req,res,next)=>{
 
  export const createAssignment = async(req,res,next)=>{
      try {
-        const {title,description,duedate,instructor,course} = req.body;
+        console.log("test1");
+        const {course,activities,instructor} = req.body;
        
-        
-        const existAssignment = await Assignment.findOne({ title: title });
+        console.log("test2",req.body);
+        // const existAssignment = await Assignment.findOne({ course });
 
-        if (existAssignment) {
-         return res.status(400).json({ message: "Assignment already exist" });
-         }
+        // if (existAssignment) {
+        //  return res.status(400).json({ message: "Assignment already exist" });
+        //  }
          
        
-        const newAssignment = new Assignment({ title,description,duedate,instructor,course }); 
+        const newAssignment = new Assignment({course,activities,instructor}); 
         await newAssignment.save();
         console.log("test3");
       res.json({ success: true , message: "Assignment create succcesfuly" , data:newAssignment});   
@@ -47,18 +54,29 @@ export const getAssignment = async(req,res,next)=>{
  };
 
  export const updateAssignment = async(req,res,next)=>{
-     try {
-      const {title,description,duedate,instructor,course} = req.body;
-      const {id} = req.params;
+    try {
+     const {course,activities,instructor} = req.body;
+     const {id} = req.params;
 
-       const updatedAssignment = await Assignment.findByIdAndUpdate(id,{title,description,duedate,instructor,course},{new:true}); 
+     console.log(activities);
+     
+     // Validate input
+    if (!course || !activities || !instructor) {
+        return res.status(400).json({ message: "Missing required fields" });
+      }
 
-      res.json({ success: true , message: "Assignment updated succcesfuly" , data:updatedAssignment });   
+      const updatedAssignment = await Assignment.findByIdAndUpdate(id,{course,activities,instructor},{new:true,runValidators: true}); 
 
-    } catch (error) {
-         res.status(400).json({ message: "intern server error"});
-     }
- };
+      if (!updatedAssignment) {
+        return res.status(404).json({ message: "Assignment plan not found" });
+      }
+
+     res.json({ success: true , message: "Assignment updated succcesfuly" , data:updatedAssignment });   
+
+   } catch (error) {
+        res.status(500).json({ message: "Assignment internal server error"});
+    }
+};
 
  export const deleteAssignment = async(req,res,next)=>{
      try {

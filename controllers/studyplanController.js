@@ -16,15 +16,16 @@ export const getStudyplan = async(req,res,next)=>{
 
 export const createStudyplan = async(req,res,next)=>{
     try {
-       const {course,activities,user,instructor} = req.body;
-      
-       const existStudyplan = await Studyplan.findOne({ course: course });
+       const {course,activities,instructor} = req.body;
+        console.log("createStudyPlan",req.body);
+        
+       const existStudyplan = await Studyplan.findOne({ course });
 
        if (existStudyplan) {
         return res.status(400).json({ message: "Studyplan already exist" });
         }
 
-       const newStudyplan = new Studyplan({course,activities,user,instructor }); 
+       const newStudyplan = new Studyplan({course,activities,instructor }); 
        await newStudyplan.save();
 
      res.json({ success: true , message: "Studyplancreate succcesfuly" , data:newStudyplan});   
@@ -32,7 +33,7 @@ export const createStudyplan = async(req,res,next)=>{
     } catch (error) {
         console.log(error);
        
-        res.status(400).json({ message: "Studyplan intern server  error"});
+        res.status(400).json({ message: "Studyplan internal server  error"});
     }
 };
 
@@ -40,15 +41,26 @@ export const createStudyplan = async(req,res,next)=>{
 
 export const updateStudyplan = async(req,res,next)=>{
     try {
-     const {course,activities,user,instructor} = req.body;
+     const {course,activities,instructor} = req.body;
      const {id} = req.params;
 
-      const updatedStudyplan = await Studyplan.findByIdAndUpdate(id,{course,activities,user,instructor},{new:true}); 
+     console.log(activities);
+     
+     // Validate input
+    if (!course || !activities || !instructor) {
+        return res.status(400).json({ message: "Missing required fields" });
+      }
 
-     res.json({ success: true , message: "Assignment updated succcesfuly" , data:updatedStudyplan });   
+      const updatedStudyplan = await Studyplan.findByIdAndUpdate(id,{course,activities,instructor},{new:true,runValidators: true}); 
+
+      if (!updatedStudyplan) {
+        return res.status(404).json({ message: "Study plan not found" });
+      }
+
+     res.json({ success: true , message: "Studyplan updated succcesfuly" , data:updatedStudyplan });   
 
    } catch (error) {
-        res.status(400).json({ message: "Studyplan intern server error"});
+        res.status(500).json({ message: "Studyplan internal server error"});
     }
 };
 

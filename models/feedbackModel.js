@@ -4,22 +4,19 @@ const feedbackSchema = new mongoose.Schema({
 
     user: { 
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'User', // Reference to a User model 
-        required: true 
-      },
-      feedbackText: { 
+        ref: 'User', // Reference to a User model  
+      }, 
+      name: { 
         type: String, 
         required: true 
       },
-      rating: { 
-        type: Number, 
-        min: 1, 
-        max: 5, 
-      },
-      admin: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Admin',
+      message: { 
+        type: String, 
         required: true 
+      },
+      instructor: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'User', // Reference to a User model  
       },
       course: { 
             type:mongoose.Types.ObjectId,

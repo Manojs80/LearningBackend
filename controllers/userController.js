@@ -1,14 +1,14 @@
 import bcrypt from "bcrypt";
 import {User} from "../models/userModel.js"
 import { generateUserToken } from "../utils/generativeToken.js";
-
+import { cloudinaryInstance } from "../configuration/cloudinary.js";
 
 
 export const userCreate = async(req,res,next)=>{
     try {
         console.log("here");
-        const { name , email , password , mobile , profilepic , courses } = req.body;
-        console.log("usercreate ",req.body.name )
+        const { name , email , password , mobile , role, courses } = req.body;
+        console.log("usercreate ",req.body )
         if (!name || !password || !mobile || !email) {            
             return res.status(400).json({ success: false , message: "all fields required"});    
         }
@@ -18,8 +18,22 @@ export const userCreate = async(req,res,next)=>{
         }
 
        const salt = 10;
-       const hashedpassword = bcrypt.hashSync(password, salt);     
-       const newUser = new User( { name , email , password: hashedpassword , mobile , profilepic , courses }) ;  
+       const hashedpassword = bcrypt.hashSync(password, salt);  
+       if (!req.file) {
+        console.log("image not visible");
+        return res.status(400).json({ message: "image not visible" });
+         }
+       // Upload an image
+       const uploadResult = await cloudinaryInstance.uploader.upload(req.file.path).catch((error) => {
+        console.log(error);
+        });
+        console.log(uploadResult);   
+      
+        const newUser = new User( { name , email , password: hashedpassword , mobile  , role, courses }) ;  
+       if (uploadResult?.url) {
+        newUser.profilepic = uploadResult.url;
+         } 
+    
        await newUser.save();
 
        const token = generateUserToken(email,"User");
@@ -34,6 +48,8 @@ export const userCreate = async(req,res,next)=>{
 
 export const userLogin = async(req,res,next)=>{
     try {
+        console.log("userlogin");
+        
         const {  email, password  } = req.body;
         if ( !password ||  !email) {
             return res.status(400).json({ success: false , message: "all fields required"});

@@ -8,7 +8,7 @@ const studyplanSchema = new mongoose.Schema(
           },
         activities: [{
             task: { 
-            type: Number, 
+            type: String, 
             required: true
              },
             taskDescription: { 
@@ -21,9 +21,7 @@ const studyplanSchema = new mongoose.Schema(
             },
         }],
         instructor:{type:mongoose.Types.ObjectId,
-                  ref:"instructor"},
-        user: { type: mongoose.Schema.Types.ObjectId, 
-            ref: "User" },   
+                  ref:"instructor"},  
     },
     { timestamps: true},
   )
