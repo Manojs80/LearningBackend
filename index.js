@@ -8,9 +8,13 @@ import cors from "cors";
 
  const app = express()
  const port = process.env.PORT
- app.use(cors({origin: 'http://localhost:5173',
+ app.use(cors({origin: 'https://learning-frontend-orpin.vercel.app/',
   credentials:true,
  }))
+//  app.use(cors({origin: 'http://localhost:5173',
+//   credentials:true,
+//  }))
+
  connectDB()
  
  app.use(express.json())
