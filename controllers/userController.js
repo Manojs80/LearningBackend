@@ -62,9 +62,11 @@ export const userLogin = async(req,res,next)=>{
          const passwordMatch = bcrypt.compareSync(password, userExist.password);
          if (!passwordMatch) { return  res.status(400).json({ success: false , message: "does not match"});  
         }
-
+        
+        console.log("userlogin",email);
         const token = generateUserToken(email,"User");
-        res.cookie("token", token );
+        console.log("userlogin token",token);
+        res.cookie("token",token);
         res.json({ success: true , message: "user login succcesfuly"})
 
     } catch (error) {
@@ -116,14 +118,15 @@ export const userDelete = async(req,res,next)=>{
     }
 };
 
-// export const checkUser = async(req,res,next)=>{
-//     try {
-//      const user = req.user;
-//      if (!user) { return  res.status(400).json({ success: true , message: "user not authenticated"});  
-//     }
-//     res.json({ success: true , message: "user  authenticated"})
+export const checkUser = async(req,res,next)=>{
+    try {
+     const user = req.user;
+     if (!user) 
+        { return  res.status(400).json({ success: true , message: "user not authenticated"});  
+         }
+    res.json({ success: true , message: "user  authenticated"})
 
-//     } catch (error) {
-//         res.status(400).json({ message: "intern server error"});
-//     }
-// }
+    } catch (error) {
+        res.status(400).json({ message: "intern server error"});
+    }
+}

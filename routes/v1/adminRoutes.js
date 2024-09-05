@@ -13,7 +13,7 @@ router.post("/login",adminLogin);
 router.get("/profile/:id", authAdmin, adminProfile);
 router.put("/update/:id", authAdmin , adminUpdate)
 router.delete("/delete/:id", authAdmin , adminDelete)
-router.get("/check-instructor", authAdmin, checkAdmin);
+router.get("/check-admin", authAdmin, checkAdmin);
 
 
 // router.delete('/course/:courseId/:id', authAdmin, async(req,res,next)=>{
