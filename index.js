@@ -4,6 +4,7 @@ import 'dotenv/config'
 import { connectDB } from './configuration/db.js'
 import cookieParser from "cookie-parser"; 
 import cors from "cors";
+import serverless from 'serverless-http';
 
 
  const app = express()
@@ -27,7 +28,8 @@ app.get('/', (req, res) => {
 
 app.use('/api',apiRouter )
 
+export default serverless(app);
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+// app.listen(port, () => {
+//   console.log(`Example app listening on port ${port}`)
+// })
