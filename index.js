@@ -8,15 +8,9 @@ import serverless from 'serverless-http';
 
 
  const app = express()
- const port = process.env.PORT
- app.use(cors({
-  origin: 'https://learning-dashboard-eta.vercel.app',
-  credentials:true,
- }))
-//  app.use(cors({
-//   origin: 'http://localhost:5173',
-//   credentials:true,
-//  }))
+ 
+ app.use(cors())
+
 
  connectDB()
  
@@ -30,6 +24,16 @@ app.use('/api',apiRouter )
 
 export default serverless(app);
 
+
+// const port = process.env.PORT
 // app.listen(port, () => {
 //   console.log(`Example app listening on port ${port}`)
 // })
+// app.use(cors({
+//   origin: 'https://learning-dashboard-eta.vercel.app',
+//   credentials:true,
+//  }))
+//  app.use(cors({
+//   origin: 'http://localhost:5173',
+//   credentials:true,
+//  }))
