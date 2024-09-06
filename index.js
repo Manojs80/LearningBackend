@@ -10,10 +10,12 @@ const port = process.env.PORT
  const app = express()
  
  
-app.use(cors({
-  origin: true, // Allows all origins
-  credentials: true // Allows cookies to be sent
-}));
+ app.use(
+  cors({
+      origin: ["https://learning-dashboard-eta.vercel.app", "http://localhost:5173"],
+      credentials: true,
+  })
+);;
  
 
  connectDB()
