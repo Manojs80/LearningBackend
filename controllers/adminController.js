@@ -1,6 +1,6 @@
 import { Admin } from "../models/adminModel.js";
 import { generateUserToken } from "../utils/generativeToken.js";
-import bcrypt from "bcrypt";
+import bcrypt from 'bcryptjs';
 import { cloudinaryInstance } from "../configuration/cloudinary.js";
 
 export const adminCreate = async (req, res, next) => {

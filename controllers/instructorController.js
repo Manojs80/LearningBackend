@@ -1,6 +1,6 @@
 import { Instructor } from "../models/instructorModel.js";
 import { generateUserToken } from "../utils/generativeToken.js";
-import bcrypt from "bcrypt";
+import bcrypt from 'bcryptjs';
 import { cloudinaryInstance } from "../configuration/cloudinary.js";
 
 export const instructorCreate = async (req, res, next) => {
