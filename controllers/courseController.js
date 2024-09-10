@@ -12,6 +12,18 @@ export const getCourseList = async(req,res,next)=>{
     }
 };
 
+export const getCourseListId = async(req,res,next)=>{
+    try {  
+        const {id} = req.params;
+        console.log("getCourseListId ",id);
+        console.log("test1",{instructor:id});
+     const courseList = await course.find({instructor:id});
+     res.json({ success: true , message: "course fetch succcesfuly" , data:courseList});   
+     console.log("getCourseListId courseList ",courseList);
+    } catch (error) {
+        res.status(400).json({ message: "intern server error"});
+    }
+};
 export const getCourse = async(req,res,next)=>{
     try {
         const {id} = req.params;
@@ -25,13 +37,8 @@ export const getCourse = async(req,res,next)=>{
 
 export const createCourse = async(req,res,next)=>{
     try {
-       const {title,description,duration} = req.body;
+       const {title,description,duration,objectives,image,instructor} = req.body;
       
-       const user=req.user;
-       let currentInstructor;
-       if(user.role==='instructor'){
-         currentInstructor = await Instructor.findOne({email:user.email});
-       }
        
        if (!req.file) {
         return res.status(400).json({ message: "image not visible" });
@@ -43,21 +50,18 @@ export const createCourse = async(req,res,next)=>{
         return res.status(400).json({ message: "course already exist" });
         }
 
-       // Upload an image
+      // Upload an image
         const uploadResult = await cloudinaryInstance.uploader.upload(req.file.path).catch((error) => {
             console.log(error);
         });
 
          console.log(uploadResult);
 
-        const newCourse = new course({ title, description,duration,objectives });
+        const newCourse = new course({ title,description,duration,objectives,image,instructor });
         if (uploadResult?.url) {
             newCourse.image = uploadResult.url;
         }        
-        if (currentInstructor) {
-            console.log(currentInstructor);
-           newCourse.instructor = currentInstructor; 
-        } 
+       
          await newCourse.save();
 
      res.json({ success: true , message: "course create succcesfuly" , data:newCourse});   
@@ -71,20 +75,29 @@ export const createCourse = async(req,res,next)=>{
 
 export const updateCourse = async(req,res,next)=>{
     try {
-     const {title,description,duration,insructor} = req.body;
+     const {title,description,image,objectives,duration,insructor} = req.body;
+     console.log("  Course update 1",req.body)
      const {id} = req.params;
-     const uploadResult = await cloudinaryInstance.uploader.upload(req.file.path).catch((error) => {
-        console.log(error);
-    });
-
-     console.log(uploadResult);
-
-      const updatedCourse = await course.findByIdAndUpdate(id,{title,description,image:uploadResult.url,duration,insructor},{new:true}); 
+     let imageUrl = undefined;
+     if (req.file) {
+        try {
+          const uploadResult = await cloudinaryInstance.uploader.upload(req.file.path);
+          imageUrl = uploadResult.url;  // Set image URL from upload result
+          console.log("Image URL:", imageUrl);
+        } catch (error) {
+          console.log("Image upload error:", error);
+          return res.status(500).json({ success: false, message: "Image upload failed" });
+        }
+      }
+      const updatedCourse = await course.findByIdAndUpdate(id,{title,description,objectives,image: imageUrl,duration,insructor},{new:true}); 
+      if (!updatedCourse) {
+        return res.status(404).json({ success: false, message: "Course not found" });
+    }
 
      res.json({ success: true , message: "course updated succcesfuly" , data:updatedCourse });   
-
+     console.log(" message: Course updated succcesfuly",updatedCourse)
     } catch (error) {
-        res.status(400).json({ message: "intern server error"});
+        res.status(400).json({ message: "internal server error"});
     }
 };
 

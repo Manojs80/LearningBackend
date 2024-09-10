@@ -67,7 +67,7 @@ export const userLogin = async(req,res,next)=>{
         const token = generateUserToken(email,"User");
         console.log("userlogin token",token);
         res.cookie("token",token);
-        res.json({ success: true , message: "user login succcesfuly"})
+        res.json({ success: true , message: "user login succcesfuly" , data:userExist})
 
     } catch (error) {
         res.status(500).json({ message: "intern server"});
@@ -87,17 +87,33 @@ export const userProfile = async(req,res,next)=>{
  
 export const userUpdate = async(req,res,next)=>{
     try {
-     const {name , email , password , mobile , profilepic , courses } = req.body;
+     let {name , email , password , mobile , profilepic ,role , courses } = req.body;
      const {id} = req.params;
      console.log("Updating user with ID:", id);
-     console.log("Update details:", { name, email, mobile, profilepic, courses });
-      const updatedUser = await User.findByIdAndUpdate(id,{name , email , password , mobile , profilepic , courses },{new:true}); 
+     console.log("Update details:", { name, email, mobile, profilepic,role, courses });
+        const salt = 10;
+       const hashedpassword = bcrypt.hashSync(password, salt);
+       if (req.file) {
+        const uploadResult = await cloudinaryInstance.uploader.upload(req.file.path).catch((error) => {
+            console.log(error);
+            });
+            // console.log(uploadResult);  
+        
+       // Upload an image   
+       if (uploadResult?.url) {
+         profilepic = uploadResult.url;
+         }
+         }
+
+      const updatedUser = await User.findByIdAndUpdate(id,{name , email , password: hashedpassword , profilepic , mobile , role, courses },{new:true}); 
+      
+     
       if (!updatedUser) {
         return res.status(404).json({ success: false, message: "User not found" });
     }
       console.log(" message: User updated succcesfuly",updatedUser)
-     res.json({ success: true , message: "User updated succcesfuly" , data:updatedUser });   
-  console.log(" message: User updated succcesfuly")
+       res.json({ success: true , message: "User updated succcesfuly" , data:updatedUser });   
+      console.log(" message: User updated succcesfuly")
     } catch (error) {
         console.error("Error updating user:", error);
         res.status(400).json({ message: "User intern server error"});

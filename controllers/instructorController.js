@@ -70,7 +70,7 @@ export const instructorLogin = async(req,res,next)=>{
 
         const token = generateUserToken(email,"Instructor");
         res.cookie("token", token );
-        res.json({ success: true , message: "Instructor login succcesfuly"})
+        res.json({ success: true , message: "Instructor login succcesfuly" , data:userExist })
 
     } catch (error) {
         res.status(500).json({ message: "intern server"});
@@ -90,15 +90,31 @@ export const instructorProfile = async (req, res, next) => {
 
 export const instructorUpdate = async(req,res,next)=>{
     try {
-     const {name, email, password, courses,role} = req.body;
+     let {name, email, password, profilepic, mobile, courses,role} = req.body;
      const {id} = req.params;
-
-      const updatedInstructor = await Instructor.findByIdAndUpdate(id,{name, email, password, courses,role},{new:true}); 
-
+     const salt = 10;
+     const hashedpassword = bcrypt.hashSync(password, salt);
+     if (req.file) {
+            const uploadResult = await cloudinaryInstance.uploader.upload(req.file.path).catch((error) => {
+                console.log(error);
+                });
+                // console.log(uploadResult);  
+            
+           // Upload an image   
+           if (uploadResult?.url) {
+             profilepic = uploadResult.url;
+             }
+             }
+      const updatedInstructor = await Instructor.findByIdAndUpdate(id,{name, email, mobile , profilepic , password: hashedpassword, courses,role},{new:true}); 
+      if (!updatedInstructor) {
+        return res.status(404).json({ success: false, message: "Instructor not found" });
+    }
      res.json({ success: true , message: "Instructor updated succcesfuly" , data:updatedInstructor });   
 
     } catch (error) {
-        res.status(400).json({ message: "Instructor intern server error"});
+        res.status(400).json({ message: "Instructor internal server error"});
+        console.log(error);
+        
     }
 };
 

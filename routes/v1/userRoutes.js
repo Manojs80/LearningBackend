@@ -11,7 +11,7 @@ const router = express.Router()
 router.post("/create",upload.single("image"), userCreate)
 router.post("/login", userLogin)
 router.get("/profile/:id",userProfile)
-router.put("/update/:id" ,upload.single("image"), userUpdate)
+router.put("/update/:id" ,upload.single("profilepic"), userUpdate)
 router.delete("/delete/:id", userDelete)
 
 router.get("/check-user",authUser, checkUser)

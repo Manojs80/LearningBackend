@@ -1,15 +1,23 @@
 import { Quiz } from "../models/quizModel.js";
+import { QuizResponse } from "../models/quizResponseModel.js";
 
  export const getQuizList = async(req,res,next)=>{
     try {
-     const QuizList = await Quiz.find();
+      const {id} = req.params;
+     const QuizList = await Quiz.find({course:id});
+     
+     if (!QuizList || QuizList.length === 0) {
+      return res.status(404).json({ success: false, message: 'No quizzes found for this course' });
+    }
+
       res.json({ success: true , message: "Quiz fetch succcesfuly" , data:QuizList});   
 
      } catch (error) {
         res.status(400).json({ message: "intern server error"});
      }
 };
-
+// const QuizList = await Quiz.findOne({course:id});
+// const {id} = req.params;
  export const getQuizId = async(req,res,next)=>{
      try {
       console.log("test-1");    
@@ -51,29 +59,51 @@ import { Quiz } from "../models/quizModel.js";
      }
  };
 
-export const submitQuiz = async(req,res,next)=>{
-     try {
-        const quiz = await Quiz.findById(req.params.id);
+ export const submitQuiz = async (req, res, next) => {
+  try {
+    console.log("submit backend 1");
+    
+    const { userId, quizId, responses } = req.body;
 
-        if (!quiz) {
-         return res.status(404).send('Quiz not found');
+    // Validate the input
+    if (!userId || !quizId || !Array.isArray(responses)) {
+      return res.status(400).json({ message: 'Invalid input' });
+    }
+
+    // Fetch the quiz
+    const quiz = await Quiz.findById(quizId).exec();
+    if (!quiz) {
+      return res.status(404).json({ message: 'Quiz not found' });
+    }
+
+    // Calculate the score
+    let score = 0;
+    responses.forEach(response => {
+      const question = quiz.questions.find(q => q._id.toString() === response.questionId);
+      if (question) {
+        const answer = question.answers.find(ans => ans._id.toString() === response.answerId);
+        if (answer && answer.isCorrect) {
+          score += 1;
         }
-
-         const answers = req.body.answers; // Example: { "questionId1": 2, "questionId2": 0 }
-         let score = 0;
-
-    quiz.questions.forEach((question, index) => {
-      const userAnswerIndex = answers[question._id];
-      if (userAnswerIndex !== undefined && userAnswerIndex === question.correctAnswerIndex) {
-        score++;
       }
     });
 
-    res.send({ score, total: quiz.questions.length });
-  } catch (error) {
-    res.status(500).send('Error submitting answers: ' + error.message);
+    // Save the responses
+    const newResponse = new QuizResponse({
+      userId,
+      quizId,
+      responses,
+      score
+    });
+    await newResponse.save();
+    console.log("submit backend 2",score);
+    // Respond with the score
+    res.json({ score });
+  } catch (err) {
+    console.error('Error submitting responses:', err);
+    res.status(500).json({ message: 'Failed to submit responses' });
   }
- };
+};
 
  export const updateQuiz = async(req,res,next)=>{
      try {

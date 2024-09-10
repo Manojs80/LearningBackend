@@ -16,4 +16,4 @@ const quizSchema = new mongoose.Schema({
     course: { type: mongoose.Schema.Types.ObjectId, ref: 'course', required: true }, 
   });
   
- export const Quiz = mongoose.model('Quiz', quizSchema);
+ export const Quiz = mongoose.model("Quiz", quizSchema);

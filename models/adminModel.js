@@ -15,6 +15,14 @@ const adminSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        mobile: {  
+            type:String,
+            required:true,
+            },
+        profilepic:{  
+            type:String,
+            default:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlNFao0fPznjqXWepZBQuAZhbEUtabbnM32MblYxtCBNecS2qBLyXVHJBITWcxKbfKsD8&usqp=CAU",  
+            }, 
         password: {
             type: String,
             required: true,

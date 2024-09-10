@@ -3,6 +3,7 @@ import { authAdmin } from "../../middleware/authAdmin.js";
 //import { Instructor } from "../../models/instructorModel.js";
 //import { course } from "../../models/courseModel.js";
 import { adminCreate, adminDelete, adminLogin, adminProfile, adminUpdate, checkAdmin } from "../../controllers/adminController.js";
+import { upload } from "../../middleware/middlewareUpload.js";
 
 
 
@@ -10,8 +11,8 @@ const router = express.Router();
 
 router.post("/create", adminCreate);
 router.post("/login",adminLogin);
-router.get("/profile/:id", authAdmin, adminProfile);
-router.put("/update/:id", authAdmin , adminUpdate)
+router.get("/profile/:id", adminProfile);
+router.put("/update/:id",upload.single("profilepic") , adminUpdate)
 router.delete("/delete/:id", authAdmin , adminDelete)
 router.get("/check-admin", authAdmin, checkAdmin);
 
@@ -44,3 +45,4 @@ router.get("/check-admin", authAdmin, checkAdmin);
 
 
 export default router;
+//, authAdmin

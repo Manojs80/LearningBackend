@@ -4,7 +4,7 @@ import { Studyplan } from "../models/studyplanModel.js";
 export const getStudyplan = async(req,res,next)=>{
    try {
     const {id} = req.params;
-    const gStudyplan = await Studyplan.findById(id);
+    const gStudyplan = await Studyplan.findOne({ courseId:id });
      res.json({ success: true , message: "Submission fetch succcesfuly" , data:gStudyplan});   
 
     } catch (error) {

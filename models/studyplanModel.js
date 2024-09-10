@@ -6,6 +6,10 @@ const studyplanSchema = new mongoose.Schema(
             type: String,
             required: true
           },
+          courseId:{
+            type:mongoose.Types.ObjectId,
+            ref:'course'
+         },
         activities: [{
             task: { 
             type: String, 

@@ -7,6 +7,8 @@
         console.log("test1",{course:id}); 
      const AssignmentList = await Assignment.find({course:id});
      console.log("test2",AssignmentList);
+
+   
       res.json({ success: true , message: "Assignment fetch succcesfuly" , data:AssignmentList});   
 
      } catch (error) {
@@ -20,7 +22,7 @@ export const getAssignment = async(req,res,next)=>{
         const {id} = req.params;
         console.log("reach assignment controller",id);
 
-     const AssignmentGet = await Assignment.findById(id);
+     const AssignmentGet = await Assignment.find({course:id});
       res.json({ success: true , message: "Assignment fetch succcesfuly" , data:AssignmentGet});   
  
      } catch (error) {

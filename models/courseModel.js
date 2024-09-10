@@ -21,7 +21,15 @@ const courseSchema = new mongoose.Schema ({
  objectives:{
   type:[String],
   default: [],
+}, 
+assignment:{
+  type:mongoose.Types.ObjectId,
+  ref:"assignment",
 },
+quiz:[{
+  type:mongoose.Types.ObjectId,
+  ref:"Quiz",
+}],
  instructor:{
     type:mongoose.Types.ObjectId,
     ref:"Instructor",

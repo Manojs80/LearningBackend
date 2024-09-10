@@ -8,10 +8,10 @@ import { createQuiz, deleteQuiz, getQuizId, getQuizList, submitQuiz, updateQuiz 
 
  const router = express.Router()
 
- router.get("/quizList", getQuizList)
+ router.get("/quizList/:id", getQuizList)
   router.get("/getQuiz/:id", getQuizId)
  router.post("/create",createQuiz)
- router.post("/quiz/:id/submit",submitQuiz)
+ router.post("/submit",submitQuiz)
  router.put("/update/:id" ,updateQuiz)
  router.delete("/delete/:id", deleteQuiz)
 
