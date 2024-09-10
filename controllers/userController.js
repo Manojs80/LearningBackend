@@ -119,6 +119,16 @@ export const userUpdate = async(req,res,next)=>{
         res.status(400).json({ message: "User intern server error"});
     }
 };
+//
+export const userList = async(req,res,next)=>{
+    try {
+     const ListUser = await User.find();
+     res.json({ success: true , message: "course fetch succcesfuly" , data:ListUser});   
+
+    } catch (error) {
+        res.status(400).json({ message: "internal User server error"});
+    }
+};
 
 export const userDelete = async(req,res,next)=>{
     try {
