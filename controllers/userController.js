@@ -37,7 +37,12 @@ export const userCreate = async(req,res,next)=>{
        await newUser.save();
 
        const token = generateUserToken(email,"User");
-       res.cookie("token", token );
+       // res.cookie("token", token );
+       res.cookie('token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production', // Secure if in production
+        sameSite: 'None', // Required for cross-origin requests
+      });
        res.json({ success: true , message: "user created succcesfuly"})
         
     } catch (error) {
@@ -66,7 +71,12 @@ export const userLogin = async(req,res,next)=>{
         console.log("userlogin",email);
         const token = generateUserToken(email,"User");
         console.log("userlogin token",token);
-        res.cookie("token",token);
+       // res.cookie("token",token);
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production', // Secure if in production
+            sameSite: 'None', // Required for cross-origin requests
+          });
         res.json({ success: true , message: "user login succcesfuly" , data:userExist})
 
     } catch (error) {
@@ -156,3 +166,4 @@ export const checkUser = async(req,res,next)=>{
         res.status(400).json({ message: "intern server error"});
     }
 }
+
