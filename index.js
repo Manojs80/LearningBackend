@@ -20,8 +20,19 @@ const port = process.env.PORT
 
  connectDB()
  
- app.use(express.json())
- app.use(cookieParser())
+ app.use(express.json());
+ app.use(cookieParser());
+
+ // Middleware to set cookies with specific attributes
+ app.use((req, res, next) => {
+  res.cookie('myCookie', 'value', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production', // Secure if in production
+    sameSite: 'None', // Required for cross-origin requests
+  });
+  next();
+});
+
  app.get("/", (req, res) => {
   res.send("Hello World!");
 });
@@ -35,15 +46,3 @@ app.listen(port, () => {
 
 
 
-// const port = process.env.PORT
-// app.listen(port, () => {
-//   console.log(`Example app listening on port ${port}`)
-// })
-// app.use(cors({
-//   origin: 'https://learning-dashboard-eta.vercel.app',
-//   credentials:true,
-//  }))
-//  app.use(cors({
-//   origin: 'http://localhost:5173',
-//   credentials:true,
-//  }))
