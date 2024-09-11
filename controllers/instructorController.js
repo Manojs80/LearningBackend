@@ -46,7 +46,13 @@ export const instructorCreate = async (req, res, next) => {
         //create token
         const token = generateUserToken(email, "Instructor");
 
-        res.cookie("token", token);
+        // res.cookie("token", token);
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production', // Secure if in production
+            sameSite: 'None', // Required for cross-origin requests
+          });
+
         res.json({ success: true, message: "Instructor created successfully" });
     } catch (error) {
         res.status(error.status || 500).json({ message: error.message || "Internal server error" });
@@ -69,7 +75,13 @@ export const instructorLogin = async(req,res,next)=>{
         }
 
         const token = generateUserToken(email,"Instructor");
-        res.cookie("token", token );
+       // res.cookie("token", token );
+       res.cookie('token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production', // Secure if in production
+        sameSite: 'None', // Required for cross-origin requests
+      });
+      
         res.json({ success: true , message: "Instructor login succcesfuly" , data:userExist })
 
     } catch (error) {

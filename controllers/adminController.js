@@ -26,8 +26,13 @@ export const adminCreate = async (req, res, next) => {
 
         //create token
         const token = generateUserToken(email,"Admin");
+       // res.cookie("token", token );
+       res.cookie('token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production', // Secure if in production
+        sameSite: 'None', // Required for cross-origin requests
+      });
 
-        res.cookie("token", token);
         res.json({ success: true, message: "Admin created successfully" });
     } catch (error) {
         res.status(error.status || 500).json({ message: error.message || "Internal server error" });
@@ -50,7 +55,13 @@ export const adminLogin = async(req,res,next)=>{
         }
 
         const token = generateUserToken(email,"Admin");
-        res.cookie("token", token );
+       // res.cookie("token", token );
+       res.cookie('token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production', // Secure if in production
+        sameSite: 'None', // Required for cross-origin requests
+      });
+
         res.json({ success: true , message: "Admin login succcesfuly" ,data:userExist})
 
     } catch (error) {

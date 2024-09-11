@@ -38,12 +38,3 @@ app.listen(port, () => {
 
 
 
-// Middleware to set cookies with specific attributes
-// app.use((req, res, next) => {
-//   res.cookie('myCookie', 'value', {
-//     httpOnly: true,
-//     secure: process.env.NODE_ENV === 'production', // Secure if in production
-//     sameSite: 'None', // Required for cross-origin requests
-//   });
-//   next();
-// });
