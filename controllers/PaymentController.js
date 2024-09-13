@@ -48,13 +48,7 @@ export const PaymentController = async (req, res) => {
             mode: 'payment',
             success_url: `${clientDomain}/payment/success`,
             cancel_url: `${clientDomain}/payment/cancel`,
-        },  {
-            headers: {
-              'Authorization': `Bearer ${process.env.STRIPE_PRIVATE_API_KEY}`,
-              'Content-Type': 'application/x-www-form-urlencoded',
-            },
-          }
-    );
+        });
 
         // Send session ID to the client
         res.status(200).json({ sessionId: session.id });
