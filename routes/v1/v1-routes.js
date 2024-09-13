@@ -9,6 +9,7 @@ import studyplanRoutes from './studyplanRoutes.js';
 import submissionRoutes from './submissionRoutes.js';
 import feedbackRoutes from './feedbackRoutes.js';
 import contactRoutes from './contactRoutes.js';
+import paymentRoutes from './paymentRoutes.js';
 import { logout } from '../../controllers/logoutController.js';
 
 const v1Router = express.Router();
@@ -24,4 +25,5 @@ v1Router.use('/quiz',quizRoutes)
 v1Router.use('/submission',submissionRoutes)
 v1Router.use('/contact',contactRoutes)
 v1Router.use('/feedback',feedbackRoutes)
+v1Router.use('/payment',paymentRoutes)
 export default v1Router;

@@ -18,6 +18,10 @@ const courseSchema = new mongoose.Schema ({
     type:Number,
     required:true,
  },
+ fee:{
+  type:Number,
+  required:true,
+},
  objectives:{
   type:[String],
   default: [],

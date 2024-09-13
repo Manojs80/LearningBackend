@@ -6,7 +6,7 @@ import { cloudinaryInstance } from "../configuration/cloudinary.js";
 
 export const userCreate = async(req,res,next)=>{
     try {
-        console.log("here");
+        console.log("userCreate");
         const { name , email , password , mobile , role, courses } = req.body;
         console.log("usercreate ",req.body )
         if (!name || !password || !mobile || !email) {            
@@ -42,6 +42,7 @@ export const userCreate = async(req,res,next)=>{
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production', // Secure if in production
         sameSite: 'None', // Required for cross-origin requests
+        path: '/' // Ensure cookie is accessible across all paths
       });
        res.json({ success: true , message: "user created succcesfuly"})
         
@@ -76,6 +77,7 @@ export const userLogin = async(req,res,next)=>{
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production', // Secure if in production
             sameSite: 'None', // Required for cross-origin requests
+            path: '/' // Ensure cookie is accessible across all paths
           });
         res.json({ success: true , message: "user login succcesfuly" , data:userExist})
 
