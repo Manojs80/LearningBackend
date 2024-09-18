@@ -74,7 +74,7 @@ export const userLogin = async(req,res,next)=>{
         console.log("userlogin token",token);
        // res.cookie("token",token);
        res.cookie('token', token, { 
-        secure: process.env.NODE_ENV === 'production' ? true : false, // Only secure in production
+        secure: true,             
         sameSite: 'None', // If needed for cross-origin requests
         path: '/',
         httpOnly: false // Set to true for security if you don't need access via JS
@@ -195,3 +195,6 @@ export const UserCourseAdd = async (req, res, next) => {
         res.status(500).json({ message: "Internal server error" });
     }
 };
+
+// secure: process.env.NODE_ENV === 'production' ? true : false,   Only secure in production
+  
