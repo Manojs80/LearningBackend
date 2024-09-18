@@ -169,3 +169,25 @@ export const checkUser = async(req,res,next)=>{
     }
 }
 
+export const UserCourseAdd = async(req,res,next)=>{
+    try {
+        const {id} = req.params;
+     const { email } = req.user;
+     const userExist = await User.findOne({email})
+
+     const Learnerid = userExist._id;
+     const updatedUser = await User.findByIdAndUpdate(Learnerid,{
+         courses: id },{new:true}); 
+      
+   
+         if (!updatedUser) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+          console.log(" message: User updated succcesfuly",updatedUser)
+           res.json({ success: true , message: "User updated succcesfuly" , data:updatedUser });   
+          console.log(" message: User updated succcesfuly")
+        } catch (error) {
+            console.error("Error updating user:", error);
+            res.status(400).json({ message: "User intern server error"});
+        }
+}
