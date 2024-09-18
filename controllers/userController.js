@@ -73,12 +73,13 @@ export const userLogin = async(req,res,next)=>{
         const token = generateUserToken(email,"User");
         console.log("userlogin token",token);
        // res.cookie("token",token);
-        res.cookie('token', token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production', // Secure if in production
-            sameSite: 'None', // Required for cross-origin requests
-            path: '/' // Ensure cookie is accessible across all paths
-          });
+       res.cookie('token', token, { 
+        secure: process.env.NODE_ENV === 'production' ? true : false, // Only secure in production
+        sameSite: 'None', // If needed for cross-origin requests
+        path: '/',
+        httpOnly: false // Set to true for security if you don't need access via JS
+    });
+    
         res.json({ success: true , message: "user login succcesfuly" , data:userExist})
 
     } catch (error) {
