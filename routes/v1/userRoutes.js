@@ -13,7 +13,7 @@ router.post("/login", userLogin)
 router.get("/profile/:id",userProfile)
 router.get("/userlist",userList)
 router.put("/update/:id" ,upload.single("profilepic"), userUpdate)
-router.put("/courseadd/:id" ,authUser, UserCourseAdd)
+router.put("/courseadd/:id" , UserCourseAdd)
 router.delete("/delete/:id", userDelete)
 
 router.get("/check-user",authUser, checkUser)

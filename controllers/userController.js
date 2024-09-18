@@ -169,25 +169,28 @@ export const checkUser = async(req,res,next)=>{
     }
 }
 
-export const UserCourseAdd = async(req,res,next)=>{
+export const UserCourseAdd = async (req, res, next) => {
     try {
-        const {id} = req.params;
-     const { email } = req.user;
-     const userExist = await User.findOne({email})
+       
+        const { id } = req.params; // Course ID
+        const { LearnerId } = req.body; // Learner ID
+        
+        // Update the user by adding the course ID to the courses array
+        const updatedUser = await User.findByIdAndUpdate(
+            LearnerId,
+            { $addToSet: { courses: id } }, // Use $addToSet to add course ID to array
+            { new: true }
+        );
 
-     const Learnerid = userExist._id;
-     const updatedUser = await User.findByIdAndUpdate(Learnerid,{
-         courses: id },{new:true}); 
-      
-   
-         if (!updatedUser) {
+        if (!updatedUser) {
             return res.status(404).json({ success: false, message: "User not found" });
         }
-          console.log(" message: User updated succcesfuly",updatedUser)
-           res.json({ success: true , message: "User updated succcesfuly" , data:updatedUser });   
-          console.log(" message: User updated succcesfuly")
-        } catch (error) {
-            console.error("Error updating user:", error);
-            res.status(400).json({ message: "User intern server error"});
-        }
-}
+
+        console.log("User updated successfully", updatedUser);
+        res.json({ success: true, message: "User updated successfully", data: updatedUser });
+        
+    } catch (error) {
+        console.error("Error updating user:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
