@@ -27,11 +27,12 @@ export const adminCreate = async (req, res, next) => {
         //create token
         const token = generateUserToken(email,"Admin");
        // res.cookie("token", token );
-       res.cookie('token', token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production', // Secure if in production
-        sameSite: 'None', // Required for cross-origin requests
-      });
+       res.cookie('token', token, { 
+        secure: true,             
+        sameSite: 'None', // If needed for cross-origin requests
+        path: '/',
+        httpOnly: false // Set to true for security if you don't need access via JS
+    });
 
         res.json({ success: true, message: "Admin created successfully" });
     } catch (error) {
@@ -56,11 +57,12 @@ export const adminLogin = async(req,res,next)=>{
 
         const token = generateUserToken(email,"Admin");
        // res.cookie("token", token );
-       res.cookie('token', token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production', // Secure if in production
-        sameSite: 'None', // Required for cross-origin requests
-      });
+       res.cookie('token', token, { 
+        secure: true,             
+        sameSite: 'None', // If needed for cross-origin requests
+        path: '/',
+        httpOnly: false // Set to true for security if you don't need access via JS
+    });
 
         res.json({ success: true , message: "Admin login succcesfuly" ,data:userExist})
 
