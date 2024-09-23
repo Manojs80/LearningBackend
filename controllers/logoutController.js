@@ -3,12 +3,10 @@ export const logout = async (req, res, next) => {
   try {
     console.log("logout");
    
-    res.cookie('token', '', { 
-      expires: new Date(0), 
-      secure: true,         // Ensure this matches your original cookie settings
-      sameSite: 'None',     // Match the original setting
-      path: '/',            // Match the original path
-      httpOnly: false       // This should match what you originally set
+    res.clearCookie('token', { 
+      path: '/',           // Ensure the path matches
+      secure: true,       // Include secure if it was set that way
+      sameSite: 'None'    // Include sameSite if it was set that way
     });
 
     res.status(200).json({ success: true, message: 'Logged out successfully' });
