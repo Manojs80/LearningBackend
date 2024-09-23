@@ -163,7 +163,7 @@ export const checkUser = async(req,res,next)=>{
      if (!user) 
         { return  res.status(400).json({ success: true , message: "user not authenticated"});  
          }
-    res.json({ success: true , message: "user  authenticated"})
+    res.json({ success: true , message: "user  authenticated" ,data:user.email})
 
     } catch (error) {
         res.status(400).json({ message: "intern server error"});
