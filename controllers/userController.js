@@ -77,7 +77,7 @@ export const userLogin = async(req,res,next)=>{
         secure: true,             
         sameSite: 'None', // If needed for cross-origin requests
         path: '/',
-        httpOnly: false // Set to true for security if you don't need access via JS
+        httpOnly: true // Set to true for security if you don't need access via JS
     });
     
         res.json({ success: true , message: "user login succcesfuly" , data:userExist})
