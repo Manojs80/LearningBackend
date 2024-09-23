@@ -44,7 +44,7 @@ export const userCreate = async(req,res,next)=>{
         path: '/',
         httpOnly: false // Set to true for security if you don't need access via JS
     });
-       res.json({ success: true , message: "user created succcesfuly"})
+       res.json({ success: true , message: "user created succcesfuly" ,data:newUser})
         
     } catch (error) {
         console.log(error);
@@ -197,4 +197,21 @@ export const UserCourseAdd = async (req, res, next) => {
 };
 
 // secure: process.env.NODE_ENV === 'production' ? true : false,   Only secure in production
+/*
+Example for local testing:
+res.cookie('token', token, { 
+    secure: false, // Set this to false for local testing
+    sameSite: 'Lax', // or omit this for local testing
+    path: '/',
+    httpOnly: false // Set to true if you don't need access via JS
+});
+Set the Secure Attribute
+res.cookie('token', token, { 
+    secure: true, // Set this to true in production
+    sameSite: 'None', // Allow cross-origin requests
+    path: '/',
+    httpOnly: false // Change to true if you don’t need to access via JS
+});
+
+*/
   

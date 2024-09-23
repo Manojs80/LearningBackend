@@ -54,7 +54,7 @@ export const instructorCreate = async (req, res, next) => {
             httpOnly: false // Set to true for security if you don't need access via JS
         });
 
-        res.json({ success: true, message: "Instructor created successfully" });
+        res.json({ success: true, message: "Instructor created successfully" ,data:newInstructor});
     } catch (error) {
         res.status(error.status || 500).json({ message: error.message || "Internal server error" });
     }
