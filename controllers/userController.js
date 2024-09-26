@@ -76,9 +76,9 @@ export const userLogin = async(req,res,next)=>{
        res.cookie('token', token, { 
         secure: true,             
         sameSite: 'None', // If needed for cross-origin requests
-        path: '/',
+        path: '/api',
         httpOnly: false // Set to true for security if you don't need access via JS
-    });
+    }); 
     
         res.json({ success: true , message: "user login succcesfuly" , data:userExist})
 
@@ -86,6 +86,16 @@ export const userLogin = async(req,res,next)=>{
         res.status(500).json({ message: "intern server"});
     }
 }
+export const Userlogout = async (req, res, next) => {
+    try {
+      console.log("logout123");
+      res.clearCookie('token', { path: '/api' });
+      console.log("logout2");
+      res.status(200).json({ success: true, message: 'Logged out successfully' });
+    } catch (error) {
+      res.status(500).json({ success: false, message: 'Error during logout' });
+    }
+  };
 
 export const userProfile = async(req,res,next)=>{
     try {
