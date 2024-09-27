@@ -76,7 +76,7 @@ export const userLogin = async(req,res,next)=>{
        res.cookie('token', token, { 
         secure: true,             
         sameSite: 'None', // If needed for cross-origin requests
-        path: '/api',
+        path: '/',
         httpOnly: false // Set to true for security if you don't need access via JS
     }); 
     
@@ -86,16 +86,7 @@ export const userLogin = async(req,res,next)=>{
         res.status(500).json({ message: "intern server"});
     }
 }
-export const Userlogout = async (req, res, next) => {
-    try {
-      console.log("logout123");
-      res.clearCookie('token', { path: '/api' });
-      console.log("logout2");
-      res.status(200).json({ success: true, message: 'Logged out successfully' });
-    } catch (error) {
-      res.status(500).json({ success: false, message: 'Error during logout' });
-    }
-  };
+
 
 export const userProfile = async(req,res,next)=>{
     try {
@@ -206,22 +197,3 @@ export const UserCourseAdd = async (req, res, next) => {
     }
 };
 
-// secure: process.env.NODE_ENV === 'production' ? true : false,   Only secure in production
-/*
-Example for local testing:
-res.cookie('token', token, { 
-    secure: false, // Set this to false for local testing
-    sameSite: 'Lax', // or omit this for local testing
-    path: '/',
-    httpOnly: false // Set to true if you don't need access via JS
-});
-Set the Secure Attribute
-res.cookie('token', token, { 
-    secure: true, // Set this to true in production
-    sameSite: 'None', // Allow cross-origin requests
-    path: '/',
-    httpOnly: false // Change to true if you don’t need to access via JS
-});
-
-*/
-  

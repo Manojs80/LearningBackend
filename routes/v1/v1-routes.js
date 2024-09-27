@@ -14,7 +14,7 @@ import { logout } from '../../controllers/logoutController.js';
 
 const v1Router = express.Router();
 
-//v1Router.post('/logout',logout)
+v1Router.post('/logout',logout)
 v1Router.use('/user',userRoutes)
 v1Router.use('/course',courseRoutes)
 v1Router.use('/studyplan',studyplanRoutes)
