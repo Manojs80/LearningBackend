@@ -67,7 +67,7 @@ export const getAssignment = async(req,res,next)=>{
         return res.status(400).json({ message: "Missing required fields" });
       }
 
-      const updatedAssignment = await Assignment.findByIdAndUpdate(id,{course,activities,instructor},{new:true,runValidators: true}); 
+      const updatedAssignment = await Assignment.findOneAndUpdate(  { course: id },{activities,instructor},{new:true,runValidators: true}); 
 
       if (!updatedAssignment) {
         return res.status(404).json({ message: "Assignment plan not found" });
@@ -84,12 +84,18 @@ export const getAssignment = async(req,res,next)=>{
      try {
     
      const {id} = req.params;
+     console.log("delete assignment",id);
+     
+    
+    if (!id) {
+        return res.status(400).json({ message: "Missing courseId" });
+    }
 
-       await Assignment.findByIdAndDelete(id); 
+     await  Assignment.deleteOne({ course:id });
 
       res.json({ success: true , message: "Assignment deleted succcesfuly" });   
 
      } catch (error) {
-         res.status(400).json({ message: "intern server error"});
+         res.status(400).json({ message: "internal server error"});
      }
  };

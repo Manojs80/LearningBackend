@@ -27,7 +27,7 @@ export const getCourseListId = async(req,res,next)=>{
 export const getCourse = async(req,res,next)=>{
     try {
         const {id} = req.params;
-     const CourseGet = await course.findById(id);
+     const CourseGet = await course.findById(id).populate('instructor');
       res.json({ success: true , message: "Coursefetch succcesfuly" , data:CourseGet});   
  
      } catch (error) {
@@ -35,47 +35,64 @@ export const getCourse = async(req,res,next)=>{
      }
  };
 
-export const createCourse = async(req,res,next)=>{
+ export const createCourse = async (req, res, next) => {
     try {
-       const {title,description,duration,objectives,image,instructor} = req.body;
-      
-       
-       if (!req.file) {
-        return res.status(400).json({ message: "image not visible" });
-         }
+        const { title, description, duration, objectives, fee, instructor } = req.body;
 
-       const existCourse = await course.findOne({ title: title });
-
-       if (existCourse) {
-        return res.status(400).json({ message: "course already exist" });
+        if (!req.file) {
+            return res.status(400).json({ message: "Image not provided" });
         }
 
-      // Upload an image
+        const existCourse = await course.findOne({ title });
+
+        if (existCourse) {
+            return res.status(400).json({ message: "Course already exists" });
+        }
+
+        // Upload an image
         const uploadResult = await cloudinaryInstance.uploader.upload(req.file.path).catch((error) => {
             console.log(error);
+            throw new Error("Image upload failed");
         });
 
-         console.log(uploadResult);
+        const newCourse = new course({
+            title,
+            description,
+            fee,
+            duration,
+            objectives,
+            image: uploadResult?.url || '', // Set image directly from uploadResult
+            instructor
+        });
 
-        const newCourse = new course({ title,description,duration,objectives,image,instructor });
-        if (uploadResult?.url) {
-            newCourse.image = uploadResult.url;
-        }        
-       
-         await newCourse.save();
+        await newCourse.save();
 
-     res.json({ success: true , message: "course create succcesfuly" , data:newCourse});   
+        // Update the instructor's courses array
+        const updatedInstructor = await Instructor.findByIdAndUpdate(
+            instructor,
+            { $addToSet: { courses: newCourse._id } }, // Add course ID to array
+            { new: true }
+        );
+
+        if (!updatedInstructor) {
+            return res.status(404).json({ success: false, message: "Instructor not found" });
+        }
+
+        console.log("Instructor updated successfully", updatedInstructor);
+
+        // Send the response after all operations
+        res.json({ success: true, message: "Course created successfully", data: newCourse });
 
     } catch (error) {
         console.log(error);
-        
-        res.status(400).json({ message: " course intern server  error"});
+        res.status(500).json({ message: "Internal server error" });
     }
 };
 
+
 export const updateCourse = async(req,res,next)=>{
     try {
-     const {title,description,image,objectives,duration,insructor} = req.body;
+     const {title,description,image,objectives,fee,duration,insructor} = req.body;
      console.log("  Course update 1",req.body)
      const {id} = req.params;
      let imageUrl = undefined;
@@ -89,7 +106,7 @@ export const updateCourse = async(req,res,next)=>{
           return res.status(500).json({ success: false, message: "Image upload failed" });
         }
       }
-      const updatedCourse = await course.findByIdAndUpdate(id,{title,description,objectives,image: imageUrl,duration,insructor},{new:true}); 
+      const updatedCourse = await course.findByIdAndUpdate(id,{title,description,fee,objectives,image: imageUrl,duration,insructor},{new:true}); 
       if (!updatedCourse) {
         return res.status(404).json({ success: false, message: "Course not found" });
     }
@@ -101,16 +118,33 @@ export const updateCourse = async(req,res,next)=>{
     }
 };
 
-export const deleteCourse = async(req,res,next)=>{
+export const deleteCourse = async (req, res, next) => {
     try {
-    
-     const {id} = req.params;
+        const { id } = req.params;
+        const courseToDelete = await course.findById(id);
+        
+        if (!courseToDelete) {
+            return res.status(404).json({ success: false, message: "Course not found" });
+        }
 
-      await course.findByIdAndDelete(id); 
+        const instructorId = courseToDelete.instructor;
+        await course.findByIdAndDelete(id);
+        
+        const updatedInstructor = await Instructor.findByIdAndUpdate(
+            instructorId,
+            { $pull: { courses: id } }, // Use $pull to remove course ID from array
+            { new: true } // Return the updated document
+        );
 
-     res.json({ success: true , message: "course deleted succcesfuly" });   
+        if (!updatedInstructor) {
+            return res.status(404).json({ success: false, message: "Instructor not found" });
+        }
+
+        console.log("User updated successfully", updatedInstructor);
+        res.json({ success: true, message: "Course deleted successfully", data: updatedInstructor });
 
     } catch (error) {
-        res.status(400).json({ message: "intern server error"});
+        console.error("Error deleting course:", error);
+        res.status(500).json({ message: "Internal server error" });
     }
 };

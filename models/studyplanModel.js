@@ -2,10 +2,7 @@ import mongoose from "mongoose";
 
 const studyplanSchema = new mongoose.Schema(
     {
-        course: { 
-            type: String,
-            required: true
-          },
+        
           courseId:{
             type:mongoose.Types.ObjectId,
             ref:'course'
@@ -19,10 +16,7 @@ const studyplanSchema = new mongoose.Schema(
               type: String, 
               required: true 
             },
-            completed: { 
-              type: Boolean, 
-              default: false 
-            },
+            
         }],
         instructor:{type:mongoose.Types.ObjectId,
                   ref:"instructor"},  

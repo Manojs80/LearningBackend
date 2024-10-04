@@ -197,3 +197,27 @@ export const UserCourseAdd = async (req, res, next) => {
     }
 };
 
+//userMoveCourse
+export const userMoveCourse = async (req, res, next) => {
+    const { id } = req.params;
+    const { newOrder } = req.body; // Expecting new order of courses
+   console.log("id",id);
+   console.log("newOrder",newOrder);
+   
+    try {
+      const user = await User.findByIdAndUpdate(
+        id,
+        { courses: newOrder }, // Update courses with the new order
+        { new: true } // Return the updated document
+      );
+  
+      if (!user) {
+        return res.status(404).send('User not found');
+      }
+  
+      res.json(user);
+    } catch (error) {
+      res.status(500).send('Server error');
+    }
+ 
+};
