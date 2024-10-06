@@ -59,9 +59,9 @@ export const getAssignment = async(req,res,next)=>{
     try {
      const {course,activities,instructor} = req.body;
      const {id} = req.params;
-
-     console.log(activities);
      
+     console.log(activities);
+    
      // Validate input
     if (!course || !activities || !instructor) {
         return res.status(400).json({ message: "Missing required fields" });

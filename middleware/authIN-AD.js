@@ -6,7 +6,7 @@ export const authINAD = (req, res, next) => {
         const { token } = req.cookies;
 
         if (!token) {
-            return res.status(400).json({ success: false, message: " Not Authorised" });
+            return res.status(400).json({ success: false, message: " Not jjjjj Authorised" });
         }
 
         const tokenVerified = jwt.verify(token, process.env.jwt_token);
