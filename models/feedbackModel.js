@@ -16,7 +16,7 @@ const feedbackSchema = new mongoose.Schema({
       },
       instructor: { 
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'User', // Reference to a User model  
+        ref: 'Instructor', // Reference to a User model  
       },
       course: { 
             type:mongoose.Types.ObjectId,
