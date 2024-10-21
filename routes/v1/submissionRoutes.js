@@ -8,10 +8,13 @@ import { authUser } from '../../middleware/authUser.js'
 
  const router = express.Router()
 
- router.get("/submissionList", authINAD,getSubmissionList )
- router.get("/:id",authINAD, getSubmission )
- router.post("/post",authUser,createSubmission)
- router.put("/update/:id",authCommon , updateSubmission )
- router.delete("/delete/:id",authINAD ,deleteSubmission)
+ router.get("/submissionList/:id",getSubmissionList )
+ router.get("/:id",getSubmission )
+ router.post("/create",createSubmission)
+ router.put("/update/:id" , updateSubmission )
+//  router.put("/update/Learner/:id" , LearnerUpdateSubmission )
+ router.delete("/delete/:id" ,deleteSubmission)
 
  export default router
+
+ //,authINAD,, authINAD",authUser,authCommon,authINAD  
